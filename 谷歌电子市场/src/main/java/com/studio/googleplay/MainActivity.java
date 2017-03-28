@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = new TextView(this);
         tv.setText("谷歌电子市场");
         tv.setGravity(Gravity.CENTER);
-        tv.setTextColor(Color.RED);
+        tv.setTextColor(Color.BLACK);
         tv.setTextSize(30);
         setContentView(tv);
 
