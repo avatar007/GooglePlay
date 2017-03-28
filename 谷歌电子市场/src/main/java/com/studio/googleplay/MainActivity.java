@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    private String name = "oneName";
+    private String name = "oneNamess";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
