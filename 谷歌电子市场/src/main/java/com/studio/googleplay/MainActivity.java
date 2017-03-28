@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
         tv.setText("谷歌电子市场");
         tv.setGravity(Gravity.CENTER);
         tv.setTextColor(Color.BLACK);
+        tv.setVisibility(View.INVISIBLE);
         tv.setTextSize(30);
         setContentView(tv);
 
