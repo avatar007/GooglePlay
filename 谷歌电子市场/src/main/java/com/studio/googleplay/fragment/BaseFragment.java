@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import com.studio.googleplay.utils.UiUtils;
 import com.studio.googleplay.view.LoadingPager;
 
+import java.util.ArrayList;
+
 /**
  * Created by Administrator on 2017/3/30.
  */
@@ -42,5 +44,22 @@ public abstract class BaseFragment extends Fragment {
 
     public void initData() {
         mLoadingPager.initData();
+    }
+
+    // 对网络返回数据的合法性进行校验
+    public LoadingPager.ResultState check(Object obj) {
+        if (obj != null) {
+            if (obj instanceof ArrayList) {// 判断是否是集合
+                ArrayList list = (ArrayList) obj;
+
+                if (list.isEmpty()) {
+                    return LoadingPager.ResultState.STATE_EMPTY;
+                } else {
+                    return LoadingPager.ResultState.STATE_SUCCESS;
+                }
+            }
+        }
+
+        return LoadingPager.ResultState.STATE_ERROR;
     }
 }

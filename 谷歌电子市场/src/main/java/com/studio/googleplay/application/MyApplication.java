@@ -4,6 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.Picasso;
+import com.studio.googleplay.http.OkHttpClientUtils;
+
 /**
  * Created by Administrator on 2017/3/29.
  */
@@ -11,6 +15,7 @@ public class MyApplication extends Application {
     private static Context sContext;
     private static Handler sHandler;
     private static int mainThreadId;
+    private Picasso mPicasso;
 
     @Override
     public void onCreate() {
@@ -18,6 +23,8 @@ public class MyApplication extends Application {
         sContext = getApplicationContext();
         sHandler = new Handler();
         mainThreadId = android.os.Process.myTid();
+        initOkHttpUtils();
+        //initPicasso();
     }
 
     public static Context getContext() {
@@ -31,4 +38,30 @@ public class MyApplication extends Application {
     public static int getMainThreadId() {
         return mainThreadId;
     }
+
+    //初始化单例OkHttpClient对象
+    private void initOkHttpUtils() {
+        OkHttpClient okHttpClient = OkHttpClientUtils.getOkHttpSingletonInstance();
+    }
+
+    /*private void initPicasso() {
+        //配置Picasso
+        mPicasso = new Picasso.Builder(this)
+                //设置内存缓存大小,10MB
+                .memoryCache((Cache) new LruCache(10 << 20))
+                //设置下载图片的格式,这样可以节省一半的内存
+                .defaultBitmapConfig(Bitmap.Config.RGB_565)
+                //配置下载器,这里用的是OkHttp,必须单独加OkHttp,同时设置了餐盘存储的位置和大小
+                //.downloader(new UrlConnectionDownloader()),这个是默认选择的类加载器,用的是HttpUrlConnection
+                //.downloader(new OkHttpDownloader(this.getCacheDir(), 10 << 20))
+                .downloader(new MyOkHttpDownLoader(getCacheDir(), 20 << 20))//使用自己定义的MyOkHttpDownloader
+                //设置图片左上角的三角标志,true表示显示
+                //红色:代表从网络下载的图片
+                //蓝色:代表从磁盘缓存加载的图片
+                //绿色:代表从内存中加载的图片
+                .indicatorsEnabled(true)
+                //.loggingEnabled(true)
+                .build();
+        mPicasso.setSingletonInstance(mPicasso);//设置picasso的单例模式
+    }*/
 }
