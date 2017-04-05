@@ -82,7 +82,7 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
             //当加载更多的布局展示出来就加载更多数据,调用loadMore方法
             //只有有更多数据时候才调用loadMore方法
             MoreHolder moreHolder = (MoreHolder) holder;
-            if (moreHolder.getData() == MoreHolder.LOAD_MORE_TRUE){
+            if (moreHolder.getData() == MoreHolder.LOAD_MORE_TRUE) {
                 loadMore(moreHolder);
             }
         }
@@ -131,4 +131,9 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 
     //具体加载更多的数据由子类去完成,加载更多要返回集合数据
     public abstract ArrayList<T> onLoadMore();
+
+    //获取当前集合大小,分页加载用
+    public int getListSize() {
+        return mDataList.size();
+    }
 }

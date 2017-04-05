@@ -2,10 +2,13 @@ package com.studio.googleplay.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
+import com.studio.googleplay.http.MyOkHttpDownLoader;
 import com.studio.googleplay.http.OkHttpClientUtils;
 
 /**
@@ -15,7 +18,7 @@ public class MyApplication extends Application {
     private static Context sContext;
     private static Handler sHandler;
     private static int mainThreadId;
-    private Picasso mPicasso;
+    private static Picasso mPicasso;
 
     @Override
     public void onCreate() {
@@ -24,7 +27,7 @@ public class MyApplication extends Application {
         sHandler = new Handler();
         mainThreadId = android.os.Process.myTid();
         initOkHttpUtils();
-        //initPicasso();
+        initPicasso();
     }
 
     public static Context getContext() {
@@ -39,16 +42,20 @@ public class MyApplication extends Application {
         return mainThreadId;
     }
 
+    public static Picasso getPicasso() {
+        return mPicasso;
+    }
+
     //初始化单例OkHttpClient对象
     private void initOkHttpUtils() {
         OkHttpClient okHttpClient = OkHttpClientUtils.getOkHttpSingletonInstance();
     }
 
-    /*private void initPicasso() {
+    private void initPicasso() {
         //配置Picasso
         mPicasso = new Picasso.Builder(this)
                 //设置内存缓存大小,10MB
-                .memoryCache((Cache) new LruCache(10 << 20))
+                .memoryCache(new LruCache(10 << 20))
                 //设置下载图片的格式,这样可以节省一半的内存
                 .defaultBitmapConfig(Bitmap.Config.RGB_565)
                 //配置下载器,这里用的是OkHttp,必须单独加OkHttp,同时设置了餐盘存储的位置和大小
@@ -63,5 +70,5 @@ public class MyApplication extends Application {
                 //.loggingEnabled(true)
                 .build();
         mPicasso.setSingletonInstance(mPicasso);//设置picasso的单例模式
-    }*/
+    }
 }

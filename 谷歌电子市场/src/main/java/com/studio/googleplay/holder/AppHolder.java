@@ -14,7 +14,7 @@ import com.studio.googleplay.utils.UiUtils;
 /**
  * Created by Administrator on 2017/3/31.
  */
-public class HomeHolder extends BaseHolder<AppInfo> {
+public class AppHolder extends BaseHolder<AppInfo> {
 
     private TextView tv_name, tv_size, tv_des;
     private ImageView iv_icon;
