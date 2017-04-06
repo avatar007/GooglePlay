@@ -11,11 +11,13 @@ import android.widget.ListView;
  */
 public class MyListView extends ListView {
     public MyListView(Context context) {
-        super(context, null);
+        super(context);
+        initView();
     }
 
     public MyListView(Context context, AttributeSet attrs) {
-        super(context, attrs, 0);
+        super(context, attrs);
+        initView();
     }
 
     public MyListView(Context context, AttributeSet attrs, int defStyleAttr) {

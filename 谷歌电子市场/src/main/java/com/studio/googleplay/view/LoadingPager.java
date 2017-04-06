@@ -115,7 +115,7 @@ public abstract class LoadingPager extends FrameLayout {
             this.state = state;
         }
 
-        public int getState() {
+        private int getState() {
             return state;
         }
     }

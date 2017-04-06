@@ -31,12 +31,12 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
         if (position == getCount() - 1) {//最后一个条目展示加载更多
             return TYPE_MORE;
         } else {
-            return InnerType(); //其他情况展示普通类型
+            return InnerType(position); //其他情况展示普通类型
         }
     }
 
     //子类可能会有三种item的布局类型,所以预留一个方法给子类重写
-    public int InnerType() {
+    public int InnerType(int position) {
         return TYPE_NORMAL;
     }
 
@@ -70,7 +70,7 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
                 //加载加载更多的布局(添加一个参数,是否加载更多需求)
                 holder = new MoreHolder(hasMore());
             } else {
-                holder = getHolder();
+                holder = getHolder(position);
             }
         } else {
             holder = (BaseHolder) convertView.getTag();
@@ -95,7 +95,7 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
     }
 
     //具体的holder由子类去实现,因为每个子类的holder都不一样
-    public abstract BaseHolder<T> getHolder();
+    public abstract BaseHolder<T> getHolder(int position);
 
     //加载更多的数据
     private void loadMore(final MoreHolder holder) {

@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Process;
 import android.view.View;
 
-import com.squareup.picasso.Picasso;
 import com.studio.googleplay.application.MyApplication;
 
 /**
@@ -27,10 +26,6 @@ public class UiUtils {
     //获取主线程id
     public static int getMainThreadId() {
         return MyApplication.getMainThreadId();
-    }
-
-    public static Picasso getPicasso() {
-        return MyApplication.getPicasso();
     }
 
     ///////////////////获取系统的资源文件/////////////////

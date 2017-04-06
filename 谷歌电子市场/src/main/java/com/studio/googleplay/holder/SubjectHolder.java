@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.studio.googleplay.R;
 import com.studio.googleplay.domain.SubjectInfo;
 import com.studio.googleplay.utils.ConstantValue;
@@ -26,7 +27,7 @@ public class SubjectHolder extends BaseHolder<SubjectInfo> {
 
     @Override
     public void refreshView(SubjectInfo data) {
-        UiUtils.getPicasso().with(UiUtils.getContext()).
+        Picasso.with(UiUtils.getContext()).
                 load(ConstantValue.SERVER_URL + "image?name=" + data.url).into(iv_pic);
         tv_title.setText(data.des);
     }

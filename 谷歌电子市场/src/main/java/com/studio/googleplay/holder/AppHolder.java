@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.studio.googleplay.R;
 import com.studio.googleplay.domain.AppInfo;
 import com.studio.googleplay.utils.ConstantValue;
@@ -33,7 +34,7 @@ public class AppHolder extends BaseHolder<AppInfo> {
 
     @Override
     public void refreshView(AppInfo data) {
-        UiUtils.getPicasso().with(UiUtils.getContext()).load(ConstantValue.SERVER_URL + "image?name=" + data.iconUrl)
+        Picasso.with(UiUtils.getContext()).load(ConstantValue.SERVER_URL + "image?name=" + data.iconUrl)
                 .into(iv_icon);
         tv_name.setText(data.name);
         tv_size.setText(Formatter.formatFileSize(UiUtils.getContext(), data.size));

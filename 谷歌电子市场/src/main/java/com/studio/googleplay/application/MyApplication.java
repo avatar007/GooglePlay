@@ -18,7 +18,6 @@ public class MyApplication extends Application {
     private static Context sContext;
     private static Handler sHandler;
     private static int mainThreadId;
-    private static Picasso mPicasso;
 
     @Override
     public void onCreate() {
@@ -42,10 +41,6 @@ public class MyApplication extends Application {
         return mainThreadId;
     }
 
-    public static Picasso getPicasso() {
-        return mPicasso;
-    }
-
     //初始化单例OkHttpClient对象
     private void initOkHttpUtils() {
         OkHttpClient okHttpClient = OkHttpClientUtils.getOkHttpSingletonInstance();
@@ -53,7 +48,7 @@ public class MyApplication extends Application {
 
     private void initPicasso() {
         //配置Picasso
-        mPicasso = new Picasso.Builder(this)
+        Picasso mPicasso = new Picasso.Builder(this)
                 //设置内存缓存大小,10MB
                 .memoryCache(new LruCache(10 << 20))
                 //设置下载图片的格式,这样可以节省一半的内存
@@ -66,7 +61,7 @@ public class MyApplication extends Application {
                 //红色:代表从网络下载的图片
                 //蓝色:代表从磁盘缓存加载的图片
                 //绿色:代表从内存中加载的图片
-                .indicatorsEnabled(true)
+                .indicatorsEnabled(false)
                 //.loggingEnabled(true)
                 .build();
         mPicasso.setSingletonInstance(mPicasso);//设置picasso的单例模式
