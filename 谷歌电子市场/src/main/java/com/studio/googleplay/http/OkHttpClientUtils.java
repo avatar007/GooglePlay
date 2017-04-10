@@ -34,7 +34,7 @@ public class OkHttpClientUtils {
     private static OkHttpClientUtils okHttpUtils = null;
     private static CacheControl cacheControl;
 
-    private OkHttpClientUtils(Context context) {
+    private OkHttpClientUtils() {
         okHttpClient = getOkHttpSingletonInstance();
         //开启响应缓存  CookiePolicy.ACCEPT_ORIGINAL_SERVER:接收服务器端缓存的内容
         /*okHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
@@ -62,11 +62,11 @@ public class OkHttpClientUtils {
     }
 
     //获取单例的OkHttpClientUtils对象
-    public static OkHttpClientUtils getOkHttpClientUtils(Context context) {
+    public static OkHttpClientUtils getOkHttpClientUtils() {
         if (okHttpUtils == null) {
             synchronized (OkHttpClientUtils.class) {
                 if (okHttpUtils == null) {
-                    okHttpUtils = new OkHttpClientUtils(context);
+                    okHttpUtils = new OkHttpClientUtils();
                 }
             }
         }
@@ -123,8 +123,8 @@ public class OkHttpClientUtils {
      * @return 返回响应体内容
      * @throws IOException 连接失败异常
      */
-    private ResponseBody buildResponseBody(String url, Object tag) throws IOException {
-        Response response = buildResponse(url, tag);
+    public static ResponseBody buildResponseBody(String url, Object tag) throws IOException {
+        Response response = getOkHttpClientUtils().buildResponse(url, tag);
         if (response.isSuccessful()) {
             return response.body();
         }
@@ -137,7 +137,7 @@ public class OkHttpClientUtils {
      * @throws IOException 连接失败异常
      */
     public static String getStringFromUrl(Context context, String url, Object tag) throws IOException {
-        ResponseBody responseBody = getOkHttpClientUtils(context).buildResponseBody(url, tag);
+        ResponseBody responseBody = getOkHttpClientUtils().buildResponseBody(url, tag);
         if (responseBody != null) {
             return responseBody.string();
         }
@@ -150,7 +150,7 @@ public class OkHttpClientUtils {
      * @throws IOException 连接失败异常
      */
     public static byte[] getByteFromUrl(Context context, String url, Object tag) throws IOException {
-        ResponseBody responseBody = getOkHttpClientUtils(context).buildResponseBody(url, tag);
+        ResponseBody responseBody = getOkHttpClientUtils().buildResponseBody(url, tag);
         if (responseBody != null) {
             return responseBody.bytes();
         }
@@ -163,7 +163,7 @@ public class OkHttpClientUtils {
      * @throws IOException 连接失败异常
      */
     public static InputStream getStreamFromUrl(Context context, String url, Object tag) throws IOException {
-        ResponseBody responseBody = getOkHttpClientUtils(context).buildResponseBody(url, tag);
+        ResponseBody responseBody = getOkHttpClientUtils().buildResponseBody(url, tag);
         if (responseBody != null) {
             return responseBody.byteStream();
         }
@@ -181,7 +181,7 @@ public class OkHttpClientUtils {
     //get异步方式访问网络
     ////////////////////////////////////////////////////////
     public static void getDataAsync(Context context, String url, Callback callback, String tag) {
-        Request request = getOkHttpClientUtils(context).buildGetRequest(url, tag);
+        Request request = getOkHttpClientUtils().buildGetRequest(url, tag);
         okHttpClient.newCall(request).enqueue(callback);
     }
 
@@ -244,8 +244,8 @@ public class OkHttpClientUtils {
      * @throws IOException
      */
     public static String postKeyValuePair(Context context, String url, Map<String, String> map) throws IOException {
-        RequestBody requestBody = getOkHttpClientUtils(context).buildRequestBody(map);
-        return getOkHttpClientUtils(context).postRequestBody(url, requestBody);
+        RequestBody requestBody = getOkHttpClientUtils().buildRequestBody(map);
+        return getOkHttpClientUtils().postRequestBody(url, requestBody);
     }
 
     /**
@@ -260,8 +260,8 @@ public class OkHttpClientUtils {
      * @throws IOException
      */
     public static String postUploadFiles(Context context, String url, Map<String, String> map, File[] files, String[] formFieldName) throws IOException {
-        RequestBody requestBody = getOkHttpClientUtils(context).buildRequestBody(map, files, formFieldName);
-        return getOkHttpClientUtils(context).postRequestBody(url, requestBody);
+        RequestBody requestBody = getOkHttpClientUtils().buildRequestBody(map, files, formFieldName);
+        return getOkHttpClientUtils().postRequestBody(url, requestBody);
     }
 
     /**
@@ -329,8 +329,8 @@ public class OkHttpClientUtils {
      * @return
      */
     public static void postKeyValuePair(Context context, String url, Map<String, String> map, Callback callback) {
-        RequestBody requestBody = getOkHttpClientUtils(context).buildRequestBody(map);
-        getOkHttpClientUtils(context).postResponseBodyAsync(url, requestBody, callback);
+        RequestBody requestBody = getOkHttpClientUtils().buildRequestBody(map);
+        getOkHttpClientUtils().postResponseBodyAsync(url, requestBody, callback);
     }
 
 }

@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.studio.googleplay.R;
+import com.studio.googleplay.manager.ThreadManager;
 import com.studio.googleplay.utils.UiUtils;
 
 /**
@@ -83,7 +84,7 @@ public abstract class LoadingPager extends FrameLayout {
     }
 
     public void initData() {
-        new Thread() {
+        /*new Thread() {
             @Override
             public void run() {
                 final ResultState resultState = onLoad();
@@ -97,7 +98,22 @@ public abstract class LoadingPager extends FrameLayout {
                     }
                 });
             }
-        }.start();
+        }.start();*/
+        ThreadManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                final ResultState resultState = onLoad();
+                UiUtils.runOnMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (resultState != null) {
+                            mCurrentState = resultState.getState();
+                            showRightPager();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     //创建成功布局由调用者去完成
