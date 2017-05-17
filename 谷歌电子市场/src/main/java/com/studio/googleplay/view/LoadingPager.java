@@ -3,9 +3,11 @@ package com.studio.googleplay.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.studio.googleplay.R;
+import com.studio.googleplay.manager.ThreadManager;
 import com.studio.googleplay.utils.UiUtils;
 
 /**
@@ -43,6 +45,13 @@ public abstract class LoadingPager extends FrameLayout {
         }
         if (mErrorPage == null) {
             mErrorPage = UiUtils.inflate(R.layout.page_error);
+            Button bt_error = (Button) mErrorPage.findViewById(R.id.bt_error);
+            bt_error.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    initData();
+                }
+            });
             addView(mErrorPage);
         }
         if (mEmptyPage == null) {
@@ -74,37 +83,55 @@ public abstract class LoadingPager extends FrameLayout {
         }
     }
 
-    public void initData(){
-        new Thread(){
+    public void initData() {
+        /*new Thread() {
             @Override
             public void run() {
                 final ResultState resultState = onLoad();
                 UiUtils.runOnMainThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (resultState != null){
+                        if (resultState != null) {
                             mCurrentState = resultState.getState();
                             showRightPager();
                         }
                     }
                 });
             }
-        }.start();
+        }.start();*/
+        ThreadManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                final ResultState resultState = onLoad();
+                UiUtils.runOnMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (resultState != null) {
+                            mCurrentState = resultState.getState();
+                            showRightPager();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     //创建成功布局由调用者去完成
     public abstract View onCreateSuccessView();
+
     public abstract ResultState onLoad();
 
-    public enum ResultState{
+    public enum ResultState {
         STATE_SUCCESS(STATE_LOAD_SUCCESS),
         STATE_ERROR(STATE_LOAD_ERROR),
         STATE_EMPTY(STATE_LOAD_EMPTY);
         private int state;
-        private ResultState(int state){
+
+        private ResultState(int state) {
             this.state = state;
         }
-        public int getState(){
+
+        private int getState() {
             return state;
         }
     }
