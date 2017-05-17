@@ -8,8 +8,6 @@ import com.studio.googleplay.utils.UiUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -18,10 +16,10 @@ import java.io.IOException;
 public abstract class BaseProtocol<T> {
     public T getData(int index) {
         String result = getCache(index);
-        if (StringUtils.isEmpty(result)){
+        if (StringUtils.isEmpty(result)) {
             result = getDataFormServer(index);
         }
-        if (result != null){
+        if (result != null) {
             T data = parseData(result);
             return data;
         }
@@ -33,7 +31,7 @@ public abstract class BaseProtocol<T> {
             String result = OkHttpClientUtils.getStringFromUrl(UiUtils.getContext(), ConstantValue.SERVER_URL
                     + getKey() + "?index=" + index + getParams(), null);
             if (!StringUtils.isEmpty(result)) {
-                setCache(index,result);
+                setCache(index, result);
                 return result;
             }
         } catch (IOException e) {
@@ -51,7 +49,8 @@ public abstract class BaseProtocol<T> {
         File cacheFile = new File(cacheDir, getKey() + "?index=" + index
                 + getParams());
 
-        FileWriter writer = null;
+        //不使用写入的的事件当做时间戳,可根据缓存文件最后一次修改的事件对比
+        /*FileWriter writer = null;
         try {
             writer = new FileWriter(cacheFile);
             // 缓存失效的截止时间
@@ -63,7 +62,7 @@ public abstract class BaseProtocol<T> {
             e.printStackTrace();
         } finally {
             IOUtils.close(writer);
-        }
+        }*/
     }
 
     // 读缓存
@@ -79,10 +78,13 @@ public abstract class BaseProtocol<T> {
             // 判断缓存是否有效
             BufferedReader reader = null;
             try {
-                reader = new BufferedReader(new FileReader(cacheFile));
-                String deadline = reader.readLine();// 读取第一行的有效期
-                long deadTime = Long.parseLong(deadline);
-                if (System.currentTimeMillis() < deadTime) {// 当前时间小于截止时间,
+                //缓存事件用当前事件减去缓存文件最后修改时间
+                long cacheTime = System.currentTimeMillis() - cacheFile.lastModified();
+                long deadTime = 30 * 60 * 1000;//缓存有效期30分钟
+                //reader = new BufferedReader(new FileReader(cacheFile));
+                //String deadline = reader.readLine();// 读取第一行的有效期
+                //long deadTime = Long.parseLong(deadline);
+                if (cacheTime > deadTime) {// 当前时间小于截止时间,
                     // 说明缓存有效
                     // 缓存有效
                     StringBuffer sb = new StringBuffer();
@@ -91,6 +93,8 @@ public abstract class BaseProtocol<T> {
                         sb.append(line);
                     }
                     return sb.toString();
+                } else {
+                    cacheFile.delete();//失效删除缓存文件
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -100,10 +104,13 @@ public abstract class BaseProtocol<T> {
         }
         return null;
     }
+
     // 解析json数据, 子类必须实现
     public abstract T parseData(String result);
+
     //具体标签页的地址由子类去传递
     public abstract String getKey();
+
     //具体网络加载的参数由子类传递
     public abstract String getParams();
 }
